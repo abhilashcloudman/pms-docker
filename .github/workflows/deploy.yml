@@ -1,0 +1,23 @@
+name: Deploy PMS Docker to Fly.io
+
+on:
+  push:
+    branches:
+      - main  # Deploys automatically when you push to the 'main' branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2  # Checks out the repo code
+
+    - name: Set up Fly.io CLI
+      run: curl -L https://fly.io/install.sh | sh  # Installs Fly.io CLI
+
+    - name: Authenticate with Fly.io
+      run: fly auth login --access-token ${{ secrets.FLY_API_TOKEN }}  # Auth with Fly.io using the secret token
+
+    - name: Deploy to Fly.io
+      run: fly deploy --remote-only  # Deploys the app to Fly.io
